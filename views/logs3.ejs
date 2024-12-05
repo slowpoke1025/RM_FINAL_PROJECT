@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <style>
+    /* General Styles */
+    body {
+      font-family: "Roboto", Arial, sans-serif;
+      margin: 20px;
+      background-color: #f5f7fa;
+      color: #333;
+      line-height: 1.6;
+    }
+    h1, h2 {
+      text-align: center;
+      color: #030304;
+    }
+    h1 {
+      margin-bottom: 10px;
+      font-size: 2em;
+    }
+    h2 {
+      margin-top: 30px;
+      font-size: 1.5em;
+    }
+
+    /* Table Styles */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 30px;
+      background-color: #fff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #eaeaea;
+    }
+    th {
+      background-color: #0056b3;
+      color: white;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    tr:last-child td {
+      border-bottom: none;
+    }
+    tr:nth-child(even) td {
+      background-color: #f9f9f9;
+    }
+    td {
+      background-color: white;
+    }
+    a {
+      color: #0056b3;
+      text-decoration: none;
+    }
+    .link-input{
+      color: #0056b3;
+      /* outline: none; */
+      font-size: 1rem;
+      flex: 1;
+    }
+    .link-form a{
+      flex: 1;
+
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* Highlight Next Link */
+    .highlight {
+      background-color: #ffffcc;
+      font-weight: bold;
+    }
+    .highlight input{
+      font-weight: bold;
+    }
+    .link-edit.green{
+      background-color: #ffde00;
+    }
+    /* Status Indicators */
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .status {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .status.active {
+      background-color: #28a745;
+      animation: pulse 1.5s infinite;
+    }
+    .status.suspended{
+      background-color: #6c757d;
+    }
+
+    .link.suspended {
+      color: #6c757d; 
+    }
+    .link-form.suspended :is(.link, input){
+      color: #6c757d;
+      
+    }
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(1.2);
+        opacity: 0.8;
+      }
+    }
+
+    /* Form and Button Styles */
+    .form-inline {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    select {
+      padding: 5px 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+      background-color: white;
+      cursor: pointer;
+    }
+    button {
+      padding: 6px 12px;
+      background-color: #0056b3;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #004494;
+    }
+
+    /* Clear Button */
+    .clear-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background-color: #dc3545;
+      border: none;
+      color: white;
+      font-size: 14px;
+      font-weight: bold;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .clear-btn:hover {
+      background-color: #c82333;
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+      body {
+        margin: 10px;
+      }
+      h1 {
+        font-size: 1.5em;
+      }
+      h2 {
+        font-size: 1.2em;
+      }
+      table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+      }
+      th, td {
+        padding: 8px 10px;
+      }
+      /* .form-inline {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+      } */
+      .clear-btn {
+        top: 10px;
+        right: 10px;
+        font-size: 12px;
+        padding: 8px 16px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.2em;
+      }
+      h2 {
+        font-size: 1em;
+      }
+      button, select {
+        font-size: 12px;
+        padding: 5px 10px;
+      }
+      body .switch-box{
+        font-size: 12px;
+        top: 10px;
+      }
+   
+    }
+
+    .link-form{
+      display: flex;
+      justify-content: space-between;
+      gap:1rem;
+    }
+    .hide{
+      display: none;
+    }
+
+
+     /* Toggle Switch Styles */
+
+     .switch-box{
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      display: flex;
+      align-items: center;
+      gap: .3rem;
+     }
+     .switch {
+      position: relative;
+
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+    }
+
+    .switch input { 
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+    }
+
+    input:checked + .slider {
+      background-color: #2196F3;
+    }
+
+    input:focus + .slider {
+      box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+
+    .slider.round {
+      border-radius: 34px;
+    }
+
+    .slider.round:before {
+      border-radius: 50%;
+    }
+
+  </style>
+</head>
+<body>
+  <button class="clear-btn" onclick="confirmClear()">RESET</button>
+  <div class="switch-box">
+  <label class="switch">
+    <input type="checkbox" id="randomFlagToggle" <%= randomFlag ? 'checked' : '' %>>
+    <span class="slider round"></span>
+  </label>
+  <span>完全隨機</span>
+</div>
+
+  
+  <h1>問卷後台</h1>
+  
+  <h2>Click Counts & Status</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>URL</th>
+        <th>Clicks</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% linksData.forEach((link, index) => { %>
+        <tr class="<%= !randomFlag && link.url === nextLink ? 'highlight' : '' %>">
+          <td><%= index + 1 %></td>
+          <td>
+            <div action="" class="link-form <%= link.status === 'active' ? 'active' : 'suspended' %>">
+            <a class="link " href="<%= link.url %>" target="_blank" data-id="<%= index %>"><%= link.url %></a>
+            <input class="link-input hide" type="text" value="<%= link.url %>">
+            <button class="link-edit">EDIT</button>
+          </div>
+          </td>
+          <td><%= link.clicks %></td>
+          <td>
+            <div class="status-indicator">
+              <span class="status <%= link.status === 'active' ? 'active' : 'suspended' %>"></span>
+              <form class="form-inline" action="/update-status" method="POST">
+                <input type="hidden" name="url" value="<%= link.url %>">
+                <select name="status">
+                  <option value="active" <%= link.status === "active" ? "selected" : "" %>>Active</option>
+                  <option value="suspended" <%= link.status === "suspended" ? "selected" : "" %>>Suspended</option>
+                </select>
+                <button type="submit">Update</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+
+  <h2>Redirect Logs</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Timestamp</th>
+        <th>IP Address</th>
+        <th>URL</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% logs.forEach((log, index) => { %>
+        <tr>
+          <td><%= index + 1 %></td>
+          <td><%= log.timestamp.toLocaleString() %></td>
+          <td><%= log.ip %></td>
+          <td><a href="<%= log.url %>" target="_blank"><%= log.url %></a></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+
+  <script>
+    // Confirmation before clearing data
+    function confirmClear() {
+      if (confirm("確定刪除資料？")) {
+        window.location.href = '/clear'; // Replace with your desired URL or action
+      }
+    }
+
+    function updateURL(id, link, input){
+
+
+      const formData = new URLSearchParams();
+      formData.append('id', id);
+      formData.append('oldUrl', link.href);
+      formData.append('newUrl', input.value);
+
+
+       fetch('/update-url', {
+          method: 'POST',
+          body: formData.toString(),
+          headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+
+        })
+          .then((response) => {
+            if (response.ok) {
+              return response.text();
+            } else {
+              throw new Error('Invalid URL / Failed to update URL');
+            }
+          })
+          .then((data) => {
+            link.textContent = link.href = input.value
+            window.location.href = '/logs';
+
+          })
+          .catch((error) => {
+            alert(error.message);
+          });
+      
+    }
+
+    document.getElementById('randomFlagToggle').addEventListener('change', function () {
+      const isChecked = this.checked;
+
+      fetch('/toggle-random-flag', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ randomFlag: isChecked }),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Failed to update random flag');
+          }
+          return window.location.reload()
+        })
+        .catch((error) => {
+          console.error(error);
+          alert(error.message);
+          this.checked = !this.checked
+        });
+    });
+
+    document.querySelectorAll(".link-form").forEach((element, id) => {
+      element.querySelector(".link-edit").addEventListener("click", e => {
+        let link = element.querySelector(".link")
+        link.classList.toggle("hide")
+        let input = element.querySelector(".link-input")
+        input.classList.toggle("hide")
+        if(e.target.textContent == "EDIT"){
+          input.value = link.href
+          e.target.textContent = "UPDATE"
+        }else{
+          e.target.textContent = "EDIT"
+          if(link.textContent != input.value) 
+            updateURL(id, link, input)
+        }
+        e.target.classList.toggle("green")
+
+      })
+    });
+    
+    
+    
+    
+    
+    
+  </script>
+</body>
+</html>
