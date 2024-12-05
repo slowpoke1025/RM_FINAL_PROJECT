@@ -70,9 +70,8 @@ app.get("/logs", (req, res) => {
     ...item,
     clicks: clicks[item.url] || 0,
   }));
-  const nextLink =
-    list.filter((item) => item.status === "active")[i % list.length]?.url ||
-    "No active links";
+  const activeList = list.filter((item) => item.status === "active");
+  const nextLink = activeList[i % activeList.length]?.url || "No active links";
   res.render("logs3", { logs, linksData, nextLink, randomFlag });
 });
 
