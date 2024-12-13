@@ -6,10 +6,10 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 const list = [
-  { url: "https://www.surveycake.com/s/DYxaX", status: "active" },
-  { url: "https://www.surveycake.com/s/PXAwM", status: "active" },
-  { url: "https://www.surveycake.com/s/DYxGe", status: "active" },
-  { url: "https://www.surveycake.com/s/og7N2", status: "active" },
+  { url: "https://www.surveycake.com/s/mVK1l", status: "active" },
+  { url: "https://www.surveycake.com/s/oZPm9", status: "active" },
+  { url: "https://www.surveycake.com/s/qlPA9", status: "active" },
+  { url: "https://www.surveycake.com/s/Q6rgo", status: "active" },
 ];
 const clicks = Object.fromEntries(list.map((item) => [item.url, 0]));
 let logs = [];
